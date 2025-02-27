@@ -10,6 +10,10 @@ import (
 	"github.com/ariefzainuri96/go-api-blogging/cmd/api/response"
 )
 
+func (app *application) addSomething(w http.ResponseWriter, r *http.Request) {
+	// do something
+}
+
 func (app *application) postBlog(w http.ResponseWriter, r *http.Request) {
 	baseResp := response.BaseResponse{}
 

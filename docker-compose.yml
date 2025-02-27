@@ -1,11 +1,9 @@
-version: '3.8'
-
 services:
     api:
         build:
             context: .
             dockerfile: Dockerfile
-        container_name: api-template
+        container_name: api-sql-course
         ports:
             - '8080:8080'
         depends_on:
@@ -14,6 +12,7 @@ services:
             - .env
         volumes:
             - ./:/app
+        restart: always
 
     db:
         image: postgres:16.3
@@ -21,7 +20,7 @@ services:
         environment:
             POSTGRES_USER: postgres
             POSTGRES_PASSWORD: Rohanwebid96dong
-            POSTGRES_DB: go-template
+            POSTGRES_DB: api-sql-course
         ports:
             # 5433 is for host / local machine
             # 5432 is for container

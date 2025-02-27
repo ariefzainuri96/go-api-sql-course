@@ -8,7 +8,7 @@
    migrate create -seq -ext sql -dir ././cmd/migrate/migrations create_users
 
 2. Perform migration:
-   migrate -path ./cmd/migrate/migrations -database="postgres://postgres:Rohanwebid96dong@localhost:5433/go-crash-course?sslmode=disable" up
+   migrate -path ./cmd/migrate/migrations -database="postgres://postgres:Rohanwebid96dong@localhost:5433/api-sql-course?sslmode=disable" up
 
 ## Docker
 
@@ -20,6 +20,8 @@
 
 3. remove docker container with its volumes:
    docker compose down -v
+
+4. if you encounter failed to connect to db, try to stop docker compose and run again, its because the database is not yet created
 
 ## .air.toml
 
