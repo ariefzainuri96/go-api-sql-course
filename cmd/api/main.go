@@ -14,16 +14,14 @@ func main() {
 	err := godotenv.Load()
 
 	if err != nil {
-		log.Panic("Error loading .env file")
+		log.Fatal("Error loading .env file")
 		return
 	}
-
-	log.Println(os.Getenv("DB_ADDR"))
 
 	db, err := db.New(os.Getenv("DB_ADDR"), 30, 30, "10m")
 
 	if err != nil {
-		log.Panic("Error connecting to database")
+		log.Fatal("Error connecting to database")
 	}
 
 	defer db.Close()

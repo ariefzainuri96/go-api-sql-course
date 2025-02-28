@@ -29,7 +29,9 @@ type dbConfig struct {
 func (app *application) mount() *http.ServeMux {
 	mux := http.NewServeMux()
 
-	mux.Handle("/v1/blog/", http.StripPrefix("/v1/blog", app.BlogRouter()))
+	mux.Handle("/v1/blog/", middleware.Authentication(http.StripPrefix("/v1/blog", app.BlogRouter())))
+
+	mux.Handle("/v1/auth/", http.StripPrefix("/v1/auth", app.AuthRouter()))
 
 	return mux
 }

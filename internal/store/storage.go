@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 
+	"github.com/ariefzainuri96/go-api-blogging/cmd/api/request"
 	response "github.com/ariefzainuri96/go-api-blogging/cmd/api/response"
 )
 
@@ -14,11 +15,15 @@ type Storage struct {
 		GetById(context.Context, int64) (response.Blog, error)
 		DeleteById(context.Context, int64) error
 	}
+	Auth interface {
+		Login(context.Context, request.LoginRequest) (response.LoginResponse, error)
+	}
 	// create more interface here
 }
 
 func NewStorage(db *sql.DB) Storage {
 	return Storage{
 		Blogs: &BlogsStore{db},
+		Auth:  &AuthStore{db},
 	}
 }

@@ -12,13 +12,6 @@ type BlogsStore struct {
 }
 
 func (s *BlogsStore) CreateWithDB(ctx context.Context, body *response.Blog) error {
-	// query := `CREATE TABLE IF NOT EXISTS blogs (
-	// 	id INTEGER PRIMARY KEY AUTOINCREMENT,
-	// 	title TEXT NOT NULL,
-	// 	body TEXT NOT NULL,
-	// 	created_at TEXT NOT NULL,
-	// );`
-
 	query := `
 		INSERT INTO blogs (title, description)
 		VALUES ($1, $2) RETURNING id, created_at;
