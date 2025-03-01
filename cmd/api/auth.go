@@ -23,7 +23,7 @@ func (app *application) login(w http.ResponseWriter, r *http.Request) {
 	}
 	defer r.Body.Close()
 
-	resp, err := app.store.Auth.Login(r.Context(), data)
+	loginData, err := app.store.Auth.Login(r.Context(), data)
 
 	if err != nil {
 		baseResp.Status = http.StatusBadRequest
@@ -38,9 +38,13 @@ func (app *application) login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	var resp response.LoginResponse
+
 	baseResp.Status = http.StatusOK
 	baseResp.Message = "Success login!"
 	resp.BaseResponse = baseResp
+	resp.Data = loginData
+
 	loginResp, _ := resp.Marshal()
 
 	w.WriteHeader(http.StatusOK)

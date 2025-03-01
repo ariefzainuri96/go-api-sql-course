@@ -6,10 +6,7 @@ import (
 
 type LoginResponse struct {
 	BaseResponse
-	ID        string `json:"id"`
-	Token     string `json:"token"`
-	Email     string `json:"email"`
-	CreatedAt string `json:"createdAt"`
+	Data LoginData `json:"data"`
 }
 
 func (r LoginResponse) Marshal() ([]byte, error) {
@@ -24,4 +21,11 @@ func (r LoginResponse) Marshal() ([]byte, error) {
 
 func (r *LoginResponse) Unmarshal(data []byte) error {
 	return json.Unmarshal(data, &r)
+}
+
+type LoginData struct {
+	ID        int64  `json:"id"`
+	Token     string `json:"token"`
+	Email     string `json:"email"`
+	CreatedAt string `json:"createdAt"`
 }

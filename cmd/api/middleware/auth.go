@@ -1,22 +1,21 @@
 package middleware
 
 import (
-	"fmt"
-	"log"
+	"errors"
 	"net/http"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
 )
 
 // Generate JWT Token
-func GenerateToken(email string) (string, error) {
-	jwtSecret := os.Getenv("SECRET_KEY")
-
-	log.Println(jwtSecret)
+func GenerateToken(email string, id int64) (string, error) {
+	jwtSecret := strings.TrimSpace(os.Getenv("SECRET_KEY"))
 
 	claims := jwt.MapClaims{
+		"id":    id,
 		"email": email,
 		"exp":   time.Now().Add(time.Hour * 24 * 30).Unix(), // Token valid for 30 day
 	}
@@ -30,17 +29,20 @@ func Authentication(next http.Handler) http.Handler {
 	jwtSecret := os.Getenv("SECRET_KEY")
 
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		tokenString := r.Header.Get("Authorization")
-		if tokenString == "" {
+		authHeader := r.Header.Get("Authorization")
+
+		if authHeader == "" || !strings.HasPrefix(authHeader, "Bearer ") {
 			http.Error(w, "Missing Authorization Header", http.StatusUnauthorized)
 			return
 		}
 
-		token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+		tokenString := strings.TrimPrefix(authHeader, "Bearer ")
+
+		token, err := jwt.Parse(tokenString, func(token *jwt.Token) (any, error) {
 			if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
-				return nil, fmt.Errorf("Unexpected signing method")
+				return nil, errors.New("unexpected signing method")
 			}
-			return jwtSecret, nil
+			return []byte(jwtSecret), nil
 		})
 
 		if err != nil || !token.Valid {

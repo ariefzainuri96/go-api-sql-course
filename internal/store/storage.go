@@ -16,7 +16,7 @@ type Storage struct {
 		DeleteById(context.Context, int64) error
 	}
 	Auth interface {
-		Login(context.Context, request.LoginRequest) (response.LoginResponse, error)
+		Login(context.Context, request.LoginRequest) (response.LoginData, error)
 		Register(context.Context, request.LoginRequest) error
 	}
 	// create more interface here

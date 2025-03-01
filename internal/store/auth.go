@@ -13,12 +13,12 @@ type AuthStore struct {
 	db *sql.DB
 }
 
-func (store *AuthStore) Login(ctx context.Context, body request.LoginRequest) (response.LoginResponse, error) {
-	query := `SELECT * FROM users_login WHERE email = $1 AND password = $2`
+func (store *AuthStore) Login(ctx context.Context, body request.LoginRequest) (response.LoginData, error) {
+	query := `SELECT id, email, created_at FROM users_login WHERE email = $1 AND password = $2 `
 
 	row := store.db.QueryRowContext(ctx, query, body.Email, body.Password)
 
-	var login response.LoginResponse
+	var login response.LoginData
 
 	err := row.Scan(&login.ID, &login.Email, &login.CreatedAt)
 
@@ -26,7 +26,7 @@ func (store *AuthStore) Login(ctx context.Context, body request.LoginRequest) (r
 		return login, err
 	}
 
-	token, err := middleware.GenerateToken(body.Email)
+	token, err := middleware.GenerateToken(body.Email, login.ID)
 
 	if err != nil {
 		return login, err
