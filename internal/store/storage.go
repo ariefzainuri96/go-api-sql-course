@@ -17,6 +17,7 @@ type Storage struct {
 	}
 	Auth interface {
 		Login(context.Context, request.LoginRequest) (response.LoginResponse, error)
+		Register(context.Context, request.LoginRequest) error
 	}
 	// create more interface here
 }

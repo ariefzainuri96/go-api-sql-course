@@ -5,7 +5,7 @@ import (
 	"database/sql"
 
 	"github.com/ariefzainuri96/go-api-blogging/cmd/api/middleware"
-	request "github.com/ariefzainuri96/go-api-blogging/cmd/api/request"
+	"github.com/ariefzainuri96/go-api-blogging/cmd/api/request"
 	"github.com/ariefzainuri96/go-api-blogging/cmd/api/response"
 )
 
@@ -20,19 +20,31 @@ func (store *AuthStore) Login(ctx context.Context, body request.LoginRequest) (r
 
 	var login response.LoginResponse
 
+	err := row.Scan(&login.ID, &login.Email, &login.CreatedAt)
+
+	if err != nil {
+		return login, err
+	}
+
 	token, err := middleware.GenerateToken(body.Email)
 
 	if err != nil {
 		return login, err
 	}
 
-	err = row.Scan(&login.ID, &login.Email, &login.CreatedAt)
-
 	login.Token = token
 
+	return login, nil
+}
+
+func (store *AuthStore) Register(ctx context.Context, body request.LoginRequest) error {
+	query := `INSERT INTO users_login (email, password) VALUES ($1, $2)`
+
+	_, err := store.db.ExecContext(ctx, query, body.Email, body.Password)
+
 	if err != nil {
-		return login, err
+		return err
 	}
 
-	return login, nil
+	return nil
 }
